@@ -360,8 +360,16 @@ class BigBirdPegasusModelTest(ModelTesterMixin, GenerationTesterMixin, PipelineT
                         # Filter out fp noise: if one side is exactly 0.0 and the other is within
                         # 1e-6 (orders of magnitude below real gradients ~10-30), treat as OK.
                         _fp_noise = 1e-6
-                        only_in_normal = {n for n in only_in_normal if not (gradcp_grad_sums[n] == 0.0 and normal_grad_sums[n] <= _fp_noise)}
-                        only_in_gradcp = {n for n in only_in_gradcp if not (normal_grad_sums[n] == 0.0 and gradcp_grad_sums[n] <= _fp_noise)}
+                        only_in_normal = {
+                            n
+                            for n in only_in_normal
+                            if not (gradcp_grad_sums[n] == 0.0 and normal_grad_sums[n] <= _fp_noise)
+                        }
+                        only_in_gradcp = {
+                            n
+                            for n in only_in_gradcp
+                            if not (normal_grad_sums[n] == 0.0 and gradcp_grad_sums[n] <= _fp_noise)
+                        }
 
                         if only_in_normal or only_in_gradcp:
                             max_normal = max(normal_grad_sums.values()) if normal_grad_sums else 0.0
